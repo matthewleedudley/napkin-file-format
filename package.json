@@ -1,0 +1,22 @@
+{
+  "name": "napkin-file-format",
+  "version": "1.1.1",
+  "description": "A simple, human-readable file format for structured notes.",
+  "main": "validator/parser.ts",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "napkin",
+    "file format",
+    "notes"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.0.0",
+    "jest": "^27.0.0",
+    "ts-jest": "^27.0.0",
+    "@types/jest": "^27.0.0"
+  }
+}
