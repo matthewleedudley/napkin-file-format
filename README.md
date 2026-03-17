@@ -1,39 +1,22 @@
 # Napkin File Format
 
-A napkin file is a bare bones plain-text format built for AI ingestion: each file is simply a series of free-form note blocks separated by a single blank line, with no blank first or last line and no indentation or key/value rules. These minimal constraints give large-language-model parsers a predictable wrapper around unstructured text, making it easier to extract and convert the contents into structured data.
+Napkin is a small plain-text note format idea.
 
-## File Basics
+It is not trying to be a full spec, schema language, or serious data
+format. The point is just to define a lightweight shape for notes that
+are still easy for people and tools to work with.
 
-- **Extension**: `.napkin`
-- **Encoding**: UTF-8
-- **Line endings**: LF (`\n`)
+The basic idea is simple:
 
-## Document-Level Rules
+- A file is made of note blocks
+- Each note is separated by one blank line
+- Each line inside a note is split on commas
 
-1. **No leading/trailing blank lines**
-   - The very first and very last lines must contain at least one non whitespace character.
-2. **Notes**
-   - The file is a sequence of one or more _notes_.
-   - Each note is a contiguous block of one or more non-blank lines.
-   - Notes are _always_ separated by exactly one blank line.
-3. **No indentations**
-4. **No trailing periods**
-   - No non-blank line may end with a period (`.`).
-   - Every non-blank line must start in column 1.
-   - Tabs or spaces at the start of a line are disallowed.
-5. **Max 60 character lines**
-   - Every line (including blank lines) must be no more than 60 characters long.
+That is most of it.
 
-## Note Syntax
+## What A Napkin File Looks Like
 
-- Within a note, each **data point** is text, and points are **comma-separated**.
-- A note may be:
-  - A **single line** with one or more comma-separated data points, or
-  - **Multiple lines**, each up to 60 characters, where each line is one “row”.
-
-## Example
-
-```
+```text
 Sept 14 2025, 50 bucks, 50lbs of sugar,
 Needed sugar
 
@@ -41,35 +24,48 @@ October 4 2025, $10, gloves,
 Just stocking up on gloves
 ```
 
-## Formal Grammar (EBNF)
+In that example:
 
-```
-<file>       ::= <note> ( BLANK_LINE <note> )*
-<note>       ::= <data_line> ( NEWLINE <data_line> )*
-<data_line>  ::= <data_point> ( "," <data_point> )*
-<data_point> ::= <non_comma_text>
-<non_comma_text> ::= any printable character except comma or newline
-BLANK_LINE    ::= NEWLINE
-NEWLINE       ::= "\n"
-```
+- There are two notes
+- Each note has one or more lines
+- Each line becomes a row
+- Each row can be read as comma-separated values
 
-_With constraints:_
-- `<file>` starts and ends with `<data_line>`.
-- No leading spaces or tabs on any `<data_line>`.
-- Every line ≤ 60 characters.
+## Rules
 
-## Validation Checklist
+- Use the `.napkin` file extension
+- Use UTF-8 text
+- Use LF line endings (`\n`)
+- Do not start or end the file with a blank line
+- Separate notes with exactly one blank line
+- Do not indent lines with spaces or tabs
+- Keep every line at 60 characters or less
 
-- **First/Last-line**: fail if blank.
-- **Note separation**: fail if not exactly one blank line between notes.
-- **Indentation**: fail if any line begins with space or tab.
-- **Line-length**: fail if > 60 chars.
-- **Comma parse**: split each line on commas.
+## Suggested Interpretation
 
-## Contributing
+One reasonable way to read a napkin file:
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+- One blank line means "start a new note"
+- Each non-blank line is one row in that note
+- Each row is split on commas
+- Extra spaces around comma-separated values are trimmed
 
-## Changelog
+## Why Use It
 
-See [CHANGELOG.md](CHANGELOG.md).
+Napkin is useful if you want something a little more structured than
+raw text without moving all the way to JSON, YAML, or a custom schema.
+
+It works best when:
+
+- You want quick handwritten or generated notes
+- You want a format with very few rules
+- You want predictable note boundaries for later processing
+
+## Repo Layout
+
+- [`examples/`](./examples) has sample `.napkin` files
+
+## Feedback
+
+Feedback and suggestions are welcome. See
+[`CONTRIBUTING.md`](./CONTRIBUTING.md).
